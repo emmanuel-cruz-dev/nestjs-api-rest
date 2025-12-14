@@ -8,8 +8,11 @@ import {
   Post,
   Put,
   Query,
+  UsePipes,
+  ValidationPipe,
 } from '@nestjs/common';
-import { type Task, TasksService } from './tasks.service';
+import { TasksService } from './tasks.service';
+import { CreateTaskDto, UpdateTaskDto } from './dto';
 
 @Controller('/tasks')
 export class TasksController {
@@ -23,18 +26,18 @@ export class TasksController {
 
   @Get(':id')
   getTask(@Param('id') id: string) {
-    return this.tasksService.getTask(+id);
+    return this.tasksService.getTask(parseInt(id));
   }
 
   @Post()
-  createTask(@Body() task: Task) {
-    console.log(task);
+  @UsePipes(new ValidationPipe())
+  createTask(@Body() task: CreateTaskDto) {
     return this.tasksService.createTask(task);
   }
 
   @Put()
-  updateTask() {
-    return this.tasksService.updateTask();
+  updateTask(@Body() task: UpdateTaskDto) {
+    return this.tasksService.updateTask(task);
   }
 
   @Delete()
