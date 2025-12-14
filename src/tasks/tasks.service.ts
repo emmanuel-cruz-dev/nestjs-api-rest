@@ -1,13 +1,6 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { Task, CreateTaskDto, UpdateTaskDto } from './dto';
 
-export interface Task {
-  id: number;
-  title: string;
-  description: string;
-  status: boolean;
-  createdAt: Date;
-  updatedAt: Date;
-}
 @Injectable()
 export class TasksService {
   private tasks: Task[] = [];
@@ -17,10 +10,16 @@ export class TasksService {
   }
 
   getTask(id: number) {
-    return this.tasks.find((task) => task.id === id);
+    const taskFound = this.tasks.find((task) => task.id === id);
+
+    if (!taskFound) {
+      return new NotFoundException(`Task with id ${id} not found`);
+    }
+
+    return taskFound;
   }
 
-  createTask(task: Task) {
+  createTask(task: CreateTaskDto) {
     console.log(task);
     this.tasks.push({
       ...task,
@@ -31,8 +30,25 @@ export class TasksService {
     return task;
   }
 
-  updateTask() {
-    return 'Task updated successfully';
+  updateTask(task: UpdateTaskDto) {
+    const taskFound = this.tasks.find((t) => t.id === task.id);
+
+    if (!taskFound) {
+      return new NotFoundException(`Task with id ${task.id} not found`);
+    }
+
+    this.tasks = this.tasks.map((t) => {
+      if (t.id === task.id) {
+        return {
+          ...t,
+          ...task,
+          updatedAt: new Date(),
+        };
+      }
+      return t;
+    });
+
+    return task;
   }
 
   deleteTask() {
