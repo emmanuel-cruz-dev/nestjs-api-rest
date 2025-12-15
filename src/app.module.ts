@@ -1,12 +1,24 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
 import { TasksModule } from './tasks/tasks.module';
 import { ProjectsModule } from './projects/projects.module';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { HelloController } from './hello/hello.controller';
+import { PaymentsModule } from './payments/payments.module';
 
 @Module({
-  imports: [TasksModule, ProjectsModule, UsersModule, AuthModule],
+  imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: '.env',
+    }),
+    TasksModule,
+    ProjectsModule,
+    UsersModule,
+    AuthModule,
+    PaymentsModule,
+  ],
   controllers: [HelloController],
 })
 export class AppModule {}
