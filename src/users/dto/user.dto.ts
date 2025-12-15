@@ -5,9 +5,13 @@ export class User {
   firstName: string;
   lastName: string;
   emailVerified: boolean;
-  birthDate: Date;
   role: string;
   phone: string;
   createdAt: Date;
   updatedAt: Date;
+}
+
+export enum UserRole {
+  CUSTOMER = 'customer',
+  ADMIN = 'admin',
 }
