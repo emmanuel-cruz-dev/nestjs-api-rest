@@ -12,11 +12,14 @@ export class UsersService {
 
   createUser(user: CreateUserDto) {
     return this.prisma.user.create({
-      data: {
-        ...user,
-        role: 'customer',
-        createdAt: new Date(),
-        updatedAt: new Date(),
+      data: user,
+    });
+  }
+
+  deleteUser(id: number) {
+    return this.prisma.user.delete({
+      where: {
+        id: id,
       },
     });
   }
